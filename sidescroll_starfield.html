@@ -22,8 +22,8 @@
 		function make_sky(star_chars) {
 
 			var star_field = [];
-			var orbits = ["orbit_left", "orbit_right", ""];
-			var effects = ["pulse", "fade",""];
+			var orbits = ["orbit_left", "orbit_right", "empty"];
+			var effects = ["pulse", "fade","empty"];
 			var NUM_STARS = 3600;
 
 			for (i = 0; i < NUM_STARS; i++) {
@@ -109,7 +109,10 @@
 	}
 	@-webkit-keyframes pulse {
 		0% { transform: scale(1); }
-   		100% { transform: scale(1.5); }
+   		100% { transform: scale(2); }
+	}
+	@-webkit-keyframes empty {
+		
 	}
 
 
