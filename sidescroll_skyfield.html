@@ -13,8 +13,6 @@
 		function init() {
 
 			var star_chars = ["*", ".", "0", "+", "-", "6", "?", "!", "=", "#","✧"];
-			//var star_chars = ["*", ".", "0", "+", "-", "💖", "?", "!", "=", "✧", "👾", "😘"];
-			//var star_field = [];
 
 			var star_field = make_sky(star_chars);
 			$("#sky").append(star_field);
@@ -26,7 +24,7 @@
 			var star_field = [];
 			var orbits = ["orbit_left", "orbit_right", ""];
 			var effects = ["pulse", "fade",""];
-			var NUM_STARS = 1400;
+			var NUM_STARS = 3600;
 
 			for (i = 0; i < NUM_STARS; i++) {
 				if (Math.random()*100 > 80) {
@@ -57,7 +55,7 @@
 		word-break: break-all;
 		word-wrap: break-word;
 
-		width: 100%;
+		width: 200%;
 		height: 100%;
 		margin: 0 auto;
 		overflow:hidden;
@@ -85,6 +83,8 @@
 	h1 {
 		font-size: 50px;
 		letter-spacing: 0.5em;
+		right: 50%;
+		position: fixed;
 	}
 	a {
 		color: gray	;
