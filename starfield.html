@@ -10,16 +10,97 @@
 		* Made by Cassiel Moroney, CS student, mimicking parts of Alien Melon's page at http://generators.alienmelon.com/ for educational purposes only
 		*
 		*/
+
+		var subs = {
+
+  			"name" : ["Euridyce", "Aphasia", "Dagmire", "Aloy", "Alloy", "Amoy", "Dephan", "Ari", "Ako", "Kian", "Eu", "Lemma", "Purush", "Umair", "Exeir", "Devaughn", "Ise", "One", "the Shepherd", "God's little mistake", "Last Of All", "the Only"],
+  			"intro" : ["I am", "The name is", "They call me", "I'm known as", "You can call me", "It's an old name, but you can call me"],
+  			"verb" : ["fell", "fought", "woke", "carried", "dreamed"],
+  			"subject" : ["out of time and space", "in places quiet and low", "down rivers, through forests", "under aeons", "inside my own mind"],
+  			"more" : ["despite everything", "as it were", "dear to blessing", "laying low", "with dying breath", "slow but surely"],
+  			"conclusion" : ["the rain crawled down and died", "I spoke of things that could never be understood", "I placed it all in God", "I wore my hope down to its threads", "a light kept on shining", "I never learned why"]
+  		}
+
 		function init() {
 
 			var star_chars = ["*", ".", "0", "+", "-", "6", "?", "!", "=", "#","✧"];
+			var quotes = [ "My name was [name]. I [verb] [subject] and, [more], [conclusion].",
+			    "Erst was when.",
+			    "Hereby wherein.",
+			    "I never knew.",
+			    "Who am I?",
+			    "Who are you?",
+			    "It's so silent.",
+			    "You ascribe me sentience where there is none.",
+			    "You could not hope to understand me.",
+			    "How does a star dream? All I know is that I do, and it is breathtaking.",
+			    "Hey wassup.",
+			    "We've met before.",
+			    "Your mother went in the other direction.",
+			    "Do you love me?",
+			    "I fell asleep...30,200 years. Not bad for an afternoon nap.",
+			    "Wake me up when there's a new Beyonce album.",
+			    "Do you hear that echo?",
+			    "Don't get on my bad side.",
+			    "I love you.",
+			    "Did you catch the game?",
+			    "You're in the wrong neighborhood, honey.",
+			    "Slow dooooown! What's the hurry?",
+			    "I cannot smile but I also cannot cry.",
+			    "Heat death is my menopause.",
+			    "Hey, have you seen God?",
+			    "I know YOU don't miss the 70s, but I DO.",
+			    "Good things are coming your way. I can see it, out in quantum space.",
+			    "Don't call him back.",
+			    "What does an ocean look like?",
+			    "Listen...I'm allergic to CO2.",
+			    "It's not you, it's me.",
+			    "I have headphones in. This is a universal sign to not bother me!",
+			    "Estoy harta de escuchar tu voz.",
+			    "I miss [name].",
+			    "Have you heard from [name]?",
+			    "Birthday party for [name] happening just a little ways directionwards! Everyone's invited.",
+			    "What is that noise?",
+			    "I missed you! How have you been?",
+			    "I wish I could see a sunrise.",
+			    "You're not meant to be here.",
+			    "[intro] [name]. Out here, [out here]. [conclusion].",
+			    "[subject], said [name], and I didn't listen.",
+			    "Knock knock.***>Who's there?" ];
 
-			var star_field = make_sky(star_chars);
+			var star_field = make_sky(star_chars, quotes);
 			$("#sky").append(star_field);
 
 		}
 
-		function make_sky(star_chars) {
+		function mouseOver(event) {
+			//console.log(event.target.getAttribute("data-dialogue"));
+			$('#dialogue').text(event.target.getAttribute("data-dialogue"));
+		}
+
+		function mouseOut(event){
+			$('#dialogue').text("");
+		}
+
+		function make_dialogue(quotes, subs) {
+
+  			num = Math.ceil(Math.random()*quotes.length)-1;
+  			the_quote = quotes[num];
+
+  			for (s in subs) {
+  				to_sub = subs[s][Math.ceil(Math.random()*subs[s].length)-1];
+  				if ((num == 40 && s == "conclusion") || (num == 41 && s == "subject")) {
+  					to_sub = to_sub.charAt(0).toUpperCase() + to_sub.slice(1);
+  				}
+
+  				the_quote = the_quote.replace("["+s+"]", to_sub);
+  			}
+  			//console.log(num+" :: "+the_quote)
+
+			return the_quote;
+		}
+
+		function make_sky(star_chars, quotes) {
 
 			var star_field = [];
 			var orbits = ["orbit_left", "orbit_right", "empty"];
@@ -27,27 +108,28 @@
 			var NUM_STARS = 1400;
 
 			for (i = 0; i < NUM_STARS; i++) {
+					
 				if (Math.random()*100 > 80) {
 
 					var new_star_char = star_chars[Math.ceil(Math.random() * star_chars.length)-1];
 					var new_orbit = orbits[Math.ceil(Math.random()*3)-1];
 					var new_effect = effects[Math.ceil(Math.random()*3)-1];
-					var new_star = '<div class="star" style="font-size:'+ ((Math.random()*25)+1) +'px; animation: ' + new_effect + ' 4s linear ' + (Math.ceil((Math.random()*5))+1) +'s infinite alternate backwards, '+ new_orbit +' 10s linear infinite alternate;" >' + new_star_char + '</div>';
+					var new_dialogue = make_dialogue(quotes, subs);
+
+					var new_star = '<div class="star" style="font-size:'+ ((Math.random()*25)+1) +'px; animation: ' + new_effect + ' 4s linear ' + (Math.ceil((Math.random()*5))+1) +'s infinite alternate backwards, '+ new_orbit +' 10s linear infinite alternate;" onmouseover="mouseOver(event)" onmouseout="mouseOut(event)" data-dialogue="' + new_dialogue + '">' + new_star_char + '</div>';
 
 					star_field.push(new_star);
 
 				} else {
 					star_field.push('   ');
 				}
+				
 			}
 
 			return star_field;
 
 		}
 
-		function function_name(argument) {
-			// ...
-		}
 	</script>
 	<style>
 	#sky {
@@ -66,9 +148,16 @@
 		position: fixed;
 		color: gray;
 	}
+	#dialogue {
+		letter-spacing: 0.2em;
+		padding: 10px;
+		/*border: 2px solid gray;*/
+		display: inline-block;
+		text-align: : center;
+		bottom: 0px;
+	}
 	.star {
 		color: white;
-		/*-webkit-animation: orbit_left 10s linear infinite;*/
 		display: inline-block;
 	}
 	html {
@@ -120,7 +209,8 @@
 </head>
 <body onload="init();">
 	<h1> Another Sky </h1>
-	<pre><div id = "sky"> </div></pre>
+	<pre><div id="sky"> </div></pre>
+	<div id="dialogue"></div>
 	<div id="footer"> Based on <a href="http://generators.alienmelon.com/">Alien Melon's generator page</a></div>
 </body>
 </html>
