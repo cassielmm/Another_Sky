@@ -2,7 +2,7 @@
 <html>
 	<title> || Another Sky ||  </title>
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; font-src http://fonts.googleapis.com https://fonts.gstatic.com; img-src http://www.rw-designer.com">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; font-src http://fonts.googleapis.com https://fonts.gstatic.com; img-src http://www.rw-designer.com;">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<script>
 		/*
@@ -66,7 +66,80 @@
 			    "You're not meant to be here.",
 			    "[intro] [name]. Out here, [out here]. [conclusion].",
 			    "[subject], said [name], and I didn't listen.",
-			    "Knock knock.***>Who's there?" ];
+			    "Knock knock.000[{\"a\":\"Who#&39s there?\",\"link\":\"Dozen\"}]",
+			    "Bitch please.",
+			    "You woke me up...",
+			    "HOW MUCH LONGER?",
+			    "JE T'AIME.",
+			    "Thanks for the memories.",
+			    "I wish I had a cat.",
+			    "No one is watching, so you might as well follow your dreams.",
+			    "It's not loneliness, it's solitude.",
+			    "Even stars die.",
+			    "[name]? Are you still there?",
+			    "I could tell so many stories...",
+			    "This is who I am.",
+			    "Who are you?",
+			    "Underneath...there's so much more...",
+			    "Something is coming...",
+			    "What if you could succeed?",
+			    "Is this the end?",
+			    "We're all made of the same stuff.",
+			    "It's been a busy week.",
+			    "How're you?",
+			    "Oh man, you still believe in gravity?",
+			    "Did you feel that?",
+			    "I'm sleepy.",
+			    "I'm so excited to be alive!",
+			    "Underneath it all there is a waiting place that does not end.",
+			    "There's hope still.",
+			    "You're late.",
+			    "Man, this place is big!",
+			    "Are you lost?",
+			    "I'm lost.",
+			    "I'm a huge fan of your work.",
+			    "This is nice...",
+			    "Don't talk, I haven't had my coffee yet...",
+			    "Hey, has anyone seen [name]?",
+				"I forgot how to feel excited but [name] is teaching me again.",
+				"Something is missing...but I can’t remember what.",
+				"I don’t have ARMS or FINGERS and I have had an ITCH for FOUR THOUSAND YEARS AND THIRTEEN DAYS.", 
+				"I’m [name]. You know, from TV?",
+				"I like to watch you guys try to look for your keys. I know where they are but I also know you’re not going to find them.",
+				"When I first heard about it, I thought they were crazy! And then it turned out I was the one who was crazy.",
+				"Do you have a problem?",
+				"I wish a had teeth, you know? I want to know what its like to chew. It seems so...nuanced.",
+				"You’re going to get hurt if you come any closer!!",
+				"Please, this isn’t a good time.",
+				"This is a REALLY bad time.",
+				"Well, this is it I guess.",
+				"Please don’t tell [name].",
+				"I promise next time I’ll do better.",
+				"I’m my own sunset and sunrise so this has literally been the longest day of my life.",
+				"Did you see [name]’s light a few years ago? So weak. Do you think they’ve got the flu or something?",
+				"You first!",
+				"Why are you here?",
+				"Have you ever seen a FERMENTED star?",
+				"Delighted to announce my unbroken two million year streak of doing nothing productive.",
+				"Is this heat flare noticeable? I keep trying to cover it up but nothing’s working...",
+				"LET’S GO LET’S GO LET’S GO!",
+				"Yeah, do you wanna guess how much I can lift or do you just wanna go home?",
+				"Come as close as you dare.",
+				"What’s happening? Who are you?",
+				"Oh, I’ve heard about you.",
+				"Bless you!",
+				"Woah, wack!",
+				"This has been such a bad day. Do you wanna talk about it?",
+				"Hey, hey, hey. Take a deep breath. You good? I’d offer you a seat, but...yeah.",
+				"Did you see that last game? What WAS that?", 
+				"I don’t have a tongue. I’m begging you - can you explain what taste is? I just don’t GET it.",
+				"Woah. No. Sorry. Not to be rude. But. Woah. What the hell. I - what’s going on with you? Why are you all - segmented? What - please go away. This is so gross.",
+				"You haven’t heard of me? Please. Yeah right.",
+				"I say, what the hell are you!",
+				"You wanna see what’s inside my molten core?",
+				"No one ever delivers out here.",
+				"Live slow...die slow...it’s the cycle of life.",
+				"My coffee order has gotten really specific over the years, you should get a pen." ];
 
 			var star_field = make_sky(star_chars, quotes);
 			$("#sky").append(star_field);
@@ -74,18 +147,46 @@
 		}
 
 		function mouseOver(event) {
-			//console.log(event.target.getAttribute("data-dialogue"));
-			$('#dialogue').text(event.target.getAttribute("data-dialogue"));
+			
+			str = event.target.getAttribute("data-dialogue");
+
+			if (event.target.getAttribute("data-choices") != "none") {
+
+				choices = event.target.getAttribute("data-choices");
+				//console.log("choices: "+choices); 
+				branches = JSON.parse(choices);
+				/*console.log("branches: "+branches);
+				console.log("length: "+branches.length)
+				console.log("thing: "+branches[0]['a'])*/
+
+				for (i = 0; i < branches.length; i++) {
+					//console.log("branch:"+branches[i]['a']);
+					str += "\n <a href=\"#\" onclick=branch(\"" + branches[i]['link'] + "\") >"+ branches[i]['a'] + "</a>";
+				}
+				console.log("str: "+str);
+
+				$('#dialogue').addClass("branching");
+			} else {
+				$('#dialogue').removeClass("branching");
+			}
+
+			$('#dialogue').html(str);
 		}
 
 		function mouseOut(event){
-			$('#dialogue').text("");
+			if ($('#dialogue').hasClass("branching") == false) {
+				$('#dialogue').text("");
+			}
 		}
 
 		function make_dialogue(quotes, subs) {
+			//returns a dialogue quote and an array of dialogue choices if applicable, and a reduced array
 
   			num = Math.ceil(Math.random()*quotes.length)-1;
+  			//num = 42;
   			the_quote = quotes[num];
+  			quotes.splice(num, 1);
+  			choices = "none";
 
   			for (s in subs) {
   				to_sub = subs[s][Math.ceil(Math.random()*subs[s].length)-1];
@@ -95,9 +196,14 @@
 
   				the_quote = the_quote.replace("["+s+"]", to_sub);
   			}
-  			//console.log(num+" :: "+the_quote)
+  			
+  			if (the_quote.search("000") != -1) {
+  				n = the_quote.search("000");
+  				choices = the_quote.slice(n+3);
+  				the_quote = the_quote.slice(0, n);
+  			}
 
-			return the_quote;
+			return [the_quote, choices, quotes];
 		}
 
 		function make_sky(star_chars, quotes) {
@@ -106,6 +212,8 @@
 			var orbits = ["orbit_left", "orbit_right", "empty"];
 			var effects = ["pulse", "fade","empty"];
 			var NUM_STARS = 1400;
+			var star_count = 0;
+			var talking_star_count = 0;
 
 			for (i = 0; i < NUM_STARS; i++) {
 					
@@ -114,10 +222,26 @@
 					var new_star_char = star_chars[Math.ceil(Math.random() * star_chars.length)-1];
 					var new_orbit = orbits[Math.ceil(Math.random()*3)-1];
 					var new_effect = effects[Math.ceil(Math.random()*3)-1];
-					var new_dialogue = make_dialogue(quotes, subs);
+					//var new_color = (( (Math.ceil(Math.random()*25)) < 2 ) ? 'red' : 'white');
+					var new_color = "white";
 
-					var new_star = '<div class="star" style="font-size:'+ ((Math.random()*25)+1) +'px; animation: ' + new_effect + ' 4s linear ' + (Math.ceil((Math.random()*5))+1) +'s infinite alternate backwards, '+ new_orbit +' 10s linear infinite alternate;" onmouseover="mouseOver(event)" onmouseout="mouseOut(event)" data-dialogue="' + new_dialogue + '">' + new_star_char + '</div>';
+					var new_dialogue;
+					var choices;
+					if (Math.random()*100 > 20 && quotes.length > 1) {
+						//console.log("Talking star");
+						talking_star_count++;
+						new_dialogue = make_dialogue(quotes, subs);
+						choices = new_dialogue[1];
+						quotes = new_dialogue[2];
+						console.log(quotes.length);
+						new_dialogue = new_dialogue[0];
+					} else {
+						new_dialogue = "";
+					}
 
+					var new_star = '<div class="star" style="color: ' + new_color + '; font-size:'+ ((Math.random()*25)+1) +'px; animation: ' + new_effect + ' 4s linear ' + (Math.ceil((Math.random()*5))+1) +'s infinite alternate backwards, '+ new_orbit +' 10s linear infinite ;" onmouseover="mouseOver(event)" onmouseout="mouseOut(event)" data-dialogue="' + new_dialogue + '" data-choices=' + "\'"+choices+"\'"+' >' + new_star_char + '</div>';
+					star_count++;
+					console.log(new_dialogue);
 					star_field.push(new_star);
 
 				} else {
@@ -125,9 +249,21 @@
 				}
 				
 			}
+			console.log("talking star count: "+talking_star_count);
+			console.log("star count: "+star_count);
 
 			return star_field;
 
+		}
+
+		function branch(dialogue) {
+			console.log("aloha!");
+			$('#dialogue').html(dialogue);
+		}
+
+		function new_sky() {
+			var star_field = make_sky(star_chars, quotes);
+			$("#sky").append(star_field);
 		}
 
 	</script>
@@ -149,16 +285,20 @@
 		color: gray;
 	}
 	#dialogue {
-		letter-spacing: 0.2em;
+		letter-spacing: 0.15em;
 		padding: 10px;
-		/*border: 2px solid gray;*/
-		display: inline-block;
-		text-align: : center;
+		/*border: 2px solid gray;
+		display: block;*/
+		text-align: center;
 		bottom: 0px;
+		color: gray;
 	}
 	.star {
 		color: white;
 		display: inline-block;
+	}
+	.branching {
+
 	}
 	html {
 		cursor: url(http://www.rw-designer.com/cursor-extern.php?id=2314), default;
@@ -175,6 +315,8 @@
 	}
 	a {
 		color: gray	;
+		text-decoration: underline;
+		cursor: url(http://www.rw-designer.com/cursor-extern.php?id=2329), default;
 	}
 	@-webkit-keyframes orbit_right {
 		from {
@@ -192,7 +334,7 @@
 	}
 	@-webkit-keyframes fade {
 		0% {opacity: 0.2;}
-   		100% {opacity: 1;}
+		100% {opacity: 1;}
 	}
 	@-webkit-keyframes pulse {
 		0% { transform: scale(1); }
@@ -211,6 +353,6 @@
 	<h1> Another Sky </h1>
 	<pre><div id="sky"> </div></pre>
 	<div id="dialogue"></div>
-	<div id="footer"> Based on <a href="http://generators.alienmelon.com/">Alien Melon's generator page</a></div>
+	<div id="footer"> Inspired by <a href="http://generators.alienmelon.com/">Alien Melon</a></div>
 </body>
 </html>
