@@ -2,7 +2,7 @@
 <html>
 	<title> || Another Sky ||  </title>
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; font-src http://fonts.googleapis.com https://fonts.gstatic.com; img-src http://www.rw-designer.com;">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; font-src http://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' http://www.rw-designer.com;">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 	<script>
 		/*
@@ -139,7 +139,15 @@
 				"You wanna see what’s inside my molten core?",
 				"No one ever delivers out here.",
 				"Live slow...die slow...it’s the cycle of life.",
-				"My coffee order has gotten really specific over the years, you should get a pen." ];
+				"My coffee order has gotten really specific over the years, you should get a pen.", /* breakpoint*/
+				"You've only reached civilization so far? It's OK, everyone is a noob when they start out.",
+				"Never date your cluster mates 'cause if you break up you're still stuck side by side for eternity!",
+				"Ha&auml;gen-Dazs is not a real German name.",
+				"PC MASTER RACE.",
+				"If you're quiet, you can hear the heartbeat of the universe.",
+				"How can a being with a lifespan of less than a century hope to understand death? It's meaningless to you. Your lives are over as soon as they've begun.",
+				"You learn to be patient, floating out here.",
+				"All I want is pierogis and all I'm going to get is more goddamn helium." ];
 
 			var star_field = make_sky(star_chars, quotes);
 			$("#sky").append(star_field);
@@ -183,7 +191,6 @@
 			//returns a dialogue quote and an array of dialogue choices if applicable, and a reduced array
 
   			num = Math.ceil(Math.random()*quotes.length)-1;
-  			//num = 42;
   			the_quote = quotes[num];
   			quotes.splice(num, 1);
   			choices = "none";
@@ -228,20 +235,19 @@
 					var new_dialogue;
 					var choices;
 					if (Math.random()*100 > 20 && quotes.length > 1) {
-						//console.log("Talking star");
 						talking_star_count++;
 						new_dialogue = make_dialogue(quotes, subs);
 						choices = new_dialogue[1];
 						quotes = new_dialogue[2];
-						console.log(quotes.length);
 						new_dialogue = new_dialogue[0];
 					} else {
 						new_dialogue = "";
 					}
 
 					var new_star = '<div class="star" style="color: ' + new_color + '; font-size:'+ ((Math.random()*25)+1) +'px; animation: ' + new_effect + ' 4s linear ' + (Math.ceil((Math.random()*5))+1) +'s infinite alternate backwards, '+ new_orbit +' 10s linear infinite ;" onmouseover="mouseOver(event)" onmouseout="mouseOut(event)" data-dialogue="' + new_dialogue + '" data-choices=' + "\'"+choices+"\'"+' >' + new_star_char + '</div>';
+					
 					star_count++;
-					console.log(new_dialogue);
+					//console.log(new_dialogue);
 					star_field.push(new_star);
 
 				} else {
@@ -344,6 +350,68 @@
 		
 	}
 
+	/** CODE ADAPTED FROM https://www.cssportal.com/blog/css-social-media-sidebar/ **/
+	ul {
+	   list-style: none;
+	   margin: 0;
+	   padding: 0;
+	}
+	#sticky-social {
+	   right: 0;
+	   position: fixed;
+	   bottom: 30px;
+	}
+	#sticky-social a {
+	   background: #333;
+	   color: #fff;
+	   display: block;
+	   height: 35px;
+	   font: 16px "Open Sans", sans-serif;
+	   line-height: 35px;
+	   position: relative;
+	   text-align: center;
+	   width: 35px;
+	   border-radius: 5px 0px 0px 5px;
+	}
+	#sticky-social a:hover {
+		border-radius: 0px;
+	}
+	#sticky-social a span {
+	   line-height: 35px;
+	   right: -120px;
+	   position: absolute;
+	   text-align:center;
+	   width:80px;
+	   border-radius: 5px 0px 0px 5px;
+	}
+	#sticky-social a:hover span {
+	   right: 100%;
+	}
+
+	#sticky-social a[class*="twitter"] {
+		background-image: url("img/twitter_logo.png");
+		background-repeat: no-repeat;
+		background-color: #00aced; 
+	}
+	#sticky-social a[class*="twitter"]:hover,
+	#sticky-social a[class*="twitter"] span { background-color: #00aced; }
+
+	#sticky-social a[class*="linkedin"] {
+		background-image: url("img/linkedin_logo.png");
+		background-repeat: no-repeat;
+		background-color: #007bb6; 
+	}
+	#sticky-social a[class*="linkedin"]:hover,
+	#sticky-social a[class*="linkedin"] span { background-color: #007bb6; }  
+
+	#sticky-social a[class*="kofi"] {
+		background-image: url("img/kofi_logo.png");
+		background-repeat: no-repeat;
+		background-color: #4B788D; 
+	}
+	#sticky-social a[class*="kofi"]:hover,
+	#sticky-social a[class*="kofi"] span { background-color: #4B788D; } 
+
 
 	}
 	</style>
@@ -352,6 +420,15 @@
 <body onload="init();">
 	<h1> Another Sky </h1>
 	<pre><div id="sky"> </div></pre>
+	
+	<aside id="sticky-social">
+    <ul>
+        <li><a href="#" class="twitter" target="_blank"><span>Twitter</span></a></li>
+        <li><a href="https://www.linkedin.com/in/cmoroney/" class="linkedin" target="_blank"><span>LinkedIn</span></a></li>
+        <li><a href="#" class="kofi" target="_blank"><span>Ko-Fi</span></a></li>
+    </ul>
+	</aside>
+
 	<div id="dialogue"></div>
 	<div id="footer"> Inspired by <a href="http://generators.alienmelon.com/">Alien Melon</a></div>
 </body>
